@@ -9,7 +9,7 @@
         "subscriber"
      ],
     "devDependencies": {
-        "jasmine": "*"
+        "jasmine": "~2.*"
     },
     "scripts": {
         "test": "jasmine-node specs"

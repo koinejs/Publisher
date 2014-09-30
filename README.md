@@ -40,7 +40,7 @@ user.updateName = function (name) {
 };
 
 
-publisher.unsubscribeAll();                         // remove all subscriptions
+publisher.clearSubscriptions();                     // remove all subscriptions
 publisher.unsubscribe('change:userame');            // all the change:username callbakcs
 publisher.unsubscribe('change:username', callback); // only the given callback
 ```

@@ -46,4 +46,24 @@
         return this;
     };
 
+    Koine.Publisher.wrap = function (className) {
+
+        className.prototype.getPublisher = function () {
+            this._publisher = this._publisher || new Koine.Publisher();
+            return this._publisher;
+        };
+
+        className.prototype.on = function (eventName, callback) {
+            this.getPublisher().subscribe(eventName, callback);
+
+            return this;
+        };
+
+        className.prototype.trigger = function (eventName, data) {
+            this.getPublisher().publish(eventName, data);
+
+            return this;
+        };
+    };
+
 })(typeof(exports) === "undefined" ? (this.Koine || (this.Koine = {})) : exports);

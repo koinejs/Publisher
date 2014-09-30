@@ -73,4 +73,41 @@ describe("Koine.Publisher", function () {
             expect(output).toEqual('');
         });
     });
+
+    describe(".wrap()", function () {
+        var Class, publisher1, publisher2, storage1, storage2, counter;
+
+        beforeEach(function () {
+            Class = function() {};
+
+            Class.prototype.doSomething = function () {
+                this.trigger('class:do', counter++);
+            };
+
+            Koine.Publisher.wrap(Class);
+
+            counter    = 0;
+            storage1   = [];
+            storage2   = [];
+            publisher1 = new Class();
+            publisher2 = new Class();
+
+            publisher1.on('class:do', function (data) {
+                storage1.push(data);
+            });
+
+            publisher2.on('class:do', function (data) {
+                storage2.push(data);
+            });
+        });
+
+        it("makes class behave like a publisher", function () {
+            publisher1.doSomething();
+            publisher2.doSomething();
+            publisher1.doSomething();
+
+            expect(storage1).toEqual([0, 2]);
+            expect(storage2).toEqual([1]);
+        });
+    });
 });

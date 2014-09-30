@@ -44,6 +44,22 @@ publisher.clearSubscriptions();                     // remove all subscriptions
 publisher.unsubscribe('change:userame');            // all the change:username callbakcs
 publisher.unsubscribe('change:username', callback); // only the given callback
 ```
+Enabling triggers on Objects
+
+```javascript
+var MyClass = function () {};
+MyClass.prototype.sayHello = function () {};
+
+Koine.Publisher.wrap(MyClass);
+
+var object = new MyClass();
+
+object.on('sayHello', function (data) {
+    alert(['Hello', data].join(' '), '!');
+});
+
+object.trigger('someEvent', 'World'); // alert('Hello World !')
+```
 
 ### Installing
 

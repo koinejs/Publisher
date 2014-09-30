@@ -59,14 +59,14 @@ describe("Koine.Publisher", function () {
         });
 
         it("unsubscribes single event", function () {
-            publisher.unpublish('event', b);
+            publisher.unsubscribe('event', b);
 
             publisher.publish('event');
             expect(output).toEqual('ac');
         });
 
         it("unsubscribes all callbacks from an event", function () {
-            publisher.unpublish('event');
+            publisher.unsubscribe('event');
 
             publisher.publish('event');
 
@@ -75,7 +75,7 @@ describe("Koine.Publisher", function () {
     });
 
     describe(".wrap()", function () {
-        var Class, publisher1, publisher2, storage1, storage2, counter;
+        var Class, instance1, instance2, storage1, storage2, counter;
 
         beforeEach(function () {
             Class = function() {};
@@ -89,25 +89,35 @@ describe("Koine.Publisher", function () {
             counter    = 0;
             storage1   = [];
             storage2   = [];
-            publisher1 = new Class();
-            publisher2 = new Class();
+            instance1 = new Class();
+            instance2 = new Class();
 
-            publisher1.on('class:do', function (data) {
+            instance1.on('class:do', function (data) {
                 storage1.push(data);
             });
 
-            publisher2.on('class:do', function (data) {
+            instance2.on('class:do', function (data) {
                 storage2.push(data);
             });
         });
 
         it("makes class behave like a publisher", function () {
-            publisher1.doSomething();
-            publisher2.doSomething();
-            publisher1.doSomething();
+            instance1.doSomething();
+            instance2.doSomething();
+            instance1.doSomething();
 
             expect(storage1).toEqual([0, 2]);
             expect(storage2).toEqual([1]);
+        });
+
+        it("makes possible to remove callbacks calling the .off() method on the wrapped object", function () {
+            var publisher = instance1.getPublisher();
+
+            spyOn(publisher, 'unsubscribe');
+
+            instance1.off('class:do', 'foo');
+
+            expect(publisher.unsubscribe).toHaveBeenCalledWith('class:do', 'foo');
         });
     });
 });

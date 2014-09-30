@@ -27,7 +27,7 @@
         this._subscriptions = {};
     };
 
-    Koine.Publisher.prototype.unpublish = function (type, callback) {
+    Koine.Publisher.prototype.unsubscribe = function (type, callback) {
         if (callback) {
             var callbacks = this._subscriptions[type] || [];
             var index = 1;
@@ -61,6 +61,12 @@
 
         className.prototype.trigger = function (eventName, data) {
             this.getPublisher().publish(eventName, data);
+
+            return this;
+        };
+
+        className.prototype.off = function (eventName, callback) {
+            this.getPublisher().unsubscribe(eventName, callback);
 
             return this;
         };

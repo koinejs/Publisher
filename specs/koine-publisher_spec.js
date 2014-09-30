@@ -9,7 +9,7 @@ describe("Koine.Publisher", function () {
         publisher = new Koine.Publisher();
     });
 
-    it("can be instanciated", function () {
+    it("is instanciable", function () {
         expect(publisher).toBeDefined();
     });
 
@@ -28,7 +28,7 @@ describe("Koine.Publisher", function () {
         expect(output).toEqual('called with: a, b, c');
     });
 
-    it("can clear subscriptions", function () {
+    it("clears subscriptions", function () {
         var output = '';
 
         publisher.subscribe('event', function () {
@@ -58,14 +58,14 @@ describe("Koine.Publisher", function () {
             publisher.subscribe('event', b);
         });
 
-        it("it can unsubscribe single event", function () {
+        it("unsubscribes single event", function () {
             publisher.unpublish('event', b);
 
             publisher.publish('event');
             expect(output).toEqual('ac');
         });
 
-        it("it can unsubscribe all callbacks from an event", function () {
+        it("unsubscribes all callbacks from an event", function () {
             publisher.unpublish('event');
 
             publisher.publish('event');

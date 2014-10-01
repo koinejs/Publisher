@@ -16,8 +16,6 @@ Package information:
 
 ### Usage
 
-In order to create a validator, extend the ```executeValidation``` method:
-
 ```javascript
 var publisher = new Koine.Publisher();
 

@@ -21,22 +21,26 @@ In order to create a validator, extend the ```executeValidation``` method:
 ```javascript
 var publisher = new Koine.Publisher();
 
-var callback = function (data) {
-    var oldName = data.oldName;
-    var newName = data.newName;
+var callback = function (event) {
+    var oldName = event.data.oldName;
 
-    console.log('Changed name of user from "' + oldName + '" to "' + newName + '"');
+    console.log('Changed name of user from "' + oldName + '" to "' + this.name + '"');
 }
 
 publisher.subscribe('change:username', callback);
 
 user.updateName = function (name) {
-    var data = {};
-    data.oldName = this.name;
-    data.newName = name;
-    this.name = name;
+    var oldName = this.name;
 
-    publisher.publish('change:username', data);
+    if (oldName === name) {
+        return;
+    }
+
+    publisher.publish({
+        target: user,
+        type: 'change:username',
+        data: { oldName: oldName }
+    });
 };
 
 
@@ -54,11 +58,12 @@ Koine.Publisher.wrap(MyClass);
 
 var object = new MyClass();
 
-object.on('sayHello', function (data) {
-    alert(['Hello', data].join(' '), '!');
+object.on('sayHello', function (e.type) {
+    alert(['Hello', e.name].join(' '), '!');
 });
 
-object.trigger('someEvent', 'World'); // alert('Hello World !')
+object.trigger('sayHello', 'World'); // alert('Hello World !')
+object.trigger({ type: 'sayHello', name: 'World' })
 ```
 
 ### Installing

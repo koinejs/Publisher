@@ -22,7 +22,7 @@ describe("Koine.Publisher", function () {
         });
 
         // executes
-        publisher.publish('event', { vars: ['a', 'b', 'c']});
+        publisher.publish({ type: 'event', vars: ['a', 'b', 'c']});
 
         // verifies
         expect(output).toEqual('called with: a, b, c');
@@ -43,7 +43,7 @@ describe("Koine.Publisher", function () {
             storage.push(this.getName());
         });
 
-        publisher.publish('event', null, object);
+        publisher.publish({ type: 'event', target: object });
 
         expect(storage).toEqual(['foo']);
     });
@@ -57,7 +57,7 @@ describe("Koine.Publisher", function () {
 
         publisher.clearSubscriptions();
 
-        publisher.publish('event');
+        publisher.publish({type: 'event'});
 
         expect(output).toEqual('');
     });
@@ -81,14 +81,14 @@ describe("Koine.Publisher", function () {
         it("unsubscribes single event", function () {
             publisher.unsubscribe('event', b);
 
-            publisher.publish('event');
+            publisher.publish({type: 'event'});
             expect(output).toEqual('ac');
         });
 
         it("unsubscribes all callbacks from an event", function () {
             publisher.unsubscribe('event');
 
-            publisher.publish('event');
+            publisher.publish({type: 'event'});
 
             expect(output).toEqual('');
         });
@@ -101,7 +101,7 @@ describe("Koine.Publisher", function () {
             Class = function() {};
 
             Class.prototype.doSomething = function () {
-                this.trigger('class:do', counter++);
+                this.trigger({ type: 'class:do', data: counter++});
             };
 
             Class.prototype.sayHello = function (data) {
@@ -116,12 +116,12 @@ describe("Koine.Publisher", function () {
             instance1 = new Class();
             instance2 = new Class();
 
-            instance1.on('class:do', function (data) {
-                storage1.push(data);
+            instance1.on('class:do', function (event) {
+                storage1.push(event.data);
             });
 
-            instance2.on('class:do', function (data) {
-                storage2.push(data);
+            instance2.on('class:do', function (event) {
+                storage2.push(event.data);
             });
         });
 
@@ -139,7 +139,7 @@ describe("Koine.Publisher", function () {
                 storage1.push(this.sayHello('World'));
             });
 
-            instance1.trigger('event');
+            instance1.trigger({ type: 'event' });
 
             expect(storage1).toEqual(['Hello World']);
         });

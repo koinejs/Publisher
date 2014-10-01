@@ -12,12 +12,11 @@
         return this;
     };
 
-    Koine.Publisher.prototype.publish = function (type, data, context) {
-        var subscriptions = this._subscriptions[type] || [];
-        context = context || this;
+    Koine.Publisher.prototype.publish = function (e) {
+        var subscriptions = this._subscriptions[e.type] || [];
 
         subscriptions.forEach(function (callback) {
-            callback.call(context, data);
+            callback.call(e.target, e);
         });
 
         return this;
@@ -60,8 +59,9 @@
             return this;
         };
 
-        className.prototype.trigger = function (eventName, data) {
-            this.getPublisher().publish(eventName, data, this);
+        className.prototype.trigger = function (event) {
+            event.target = event.target || this;
+            this.getPublisher().publish(event);
 
             return this;
         };

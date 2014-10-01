@@ -59,9 +59,9 @@
             return this;
         };
 
-        className.prototype.trigger = function (event) {
-            event.target = event.target || this;
-            this.getPublisher().publish(event);
+        className.prototype.trigger = function (e) {
+            e.target = e.target || this;
+            this.getPublisher().publish(e);
 
             return this;
         };

@@ -12,11 +12,12 @@
         return this;
     };
 
-    Koine.Publisher.prototype.publish = function (type, data) {
+    Koine.Publisher.prototype.publish = function (type, data, context) {
         var subscriptions = this._subscriptions[type] || [];
+        context = context || this;
 
         subscriptions.forEach(function (callback) {
-            callback(data);
+            callback.call(context, data);
         });
 
         return this;
@@ -60,7 +61,7 @@
         };
 
         className.prototype.trigger = function (eventName, data) {
-            this.getPublisher().publish(eventName, data);
+            this.getPublisher().publish(eventName, data, this);
 
             return this;
         };

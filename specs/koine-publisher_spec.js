@@ -28,6 +28,26 @@ describe("Koine.Publisher", function () {
         expect(output).toEqual('called with: a, b, c');
     });
 
+    it("publishes callbacks with alternative contexts", function () {
+        var Class = function () {
+            this.getName = function () {
+                return 'foo';
+            };
+        };
+
+        var object = new Class();
+
+        var storage = [];
+
+        publisher.subscribe('event', function () {
+            storage.push(this.getName());
+        });
+
+        publisher.publish('event', null, object);
+
+        expect(storage).toEqual(['foo']);
+    });
+
     it("clears subscriptions", function () {
         var output = '';
 
@@ -84,6 +104,10 @@ describe("Koine.Publisher", function () {
                 this.trigger('class:do', counter++);
             };
 
+            Class.prototype.sayHello = function (data) {
+                return "Hello " + data;
+            };
+
             Koine.Publisher.wrap(Class);
 
             counter    = 0;
@@ -108,6 +132,16 @@ describe("Koine.Publisher", function () {
 
             expect(storage1).toEqual([0, 2]);
             expect(storage2).toEqual([1]);
+        });
+
+        it("calls publish in the context of the wrapped object", function () {
+            instance1.on('event', function () {
+                storage1.push(this.sayHello('World'));
+            });
+
+            instance1.trigger('event');
+
+            expect(storage1).toEqual(['Hello World']);
         });
 
         it("makes possible to remove callbacks calling the .off() method on the wrapped object", function () {

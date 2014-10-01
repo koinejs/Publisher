@@ -13,6 +13,10 @@
     };
 
     Koine.Publisher.prototype.publish = function (e) {
+        if (!(e instanceof Koine.Publisher.EventType)) {
+            throw new Error("Event must be instance of Koine.Publisher.EventType");
+        }
+
         var subscriptions = this._subscriptions[e.type] || [];
 
         subscriptions.forEach(function (callback) {
@@ -71,6 +75,16 @@
 
             return this;
         };
+    };
+
+    Koine.Publisher.EventType = function (type, target) {
+        if (typeof type !== "string") {
+            throw new Error("Type must be provided");
+        }
+
+        this.target = target;
+
+        this.type = type;
     };
 
 })(typeof(exports) === "undefined" ? (this.Koine || (this.Koine = {})) : exports);

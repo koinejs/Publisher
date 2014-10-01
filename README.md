@@ -36,11 +36,9 @@ user.updateName = function (name) {
         return;
     }
 
-    publisher.publish({
-        target: user,
-        type: 'change:username',
-        data: { oldName: oldName }
-    });
+    var event  = new Koine.Publisher.EventType("change:username", user);
+    event.data = { oldName: oldName };
+    publisher.publish(event);
 };
 
 
@@ -58,12 +56,15 @@ Koine.Publisher.wrap(MyClass);
 
 var object = new MyClass();
 
-object.on('sayHello', function (e.type) {
+object.on('sayHello', function (e) {
     alert(['Hello', e.name].join(' '), '!');
 });
 
-object.trigger('sayHello', 'World'); // alert('Hello World !')
-object.trigger({ type: 'sayHello', name: 'World' })
+
+var event  = new Koine.Publisher.EventType("sayHello");
+event.name = "World";
+
+object.trigger(event); // alert('Hello World !')
 ```
 
 ### Installing

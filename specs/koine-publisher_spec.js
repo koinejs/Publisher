@@ -22,10 +22,20 @@ describe("Koine.Publisher", function () {
         });
 
         // executes
-        publisher.publish({ type: 'event', vars: ['a', 'b', 'c']});
+        var e = new Koine.Publisher.EventType("event");
+        e.vars = ['a', 'b', 'c'];
+        publisher.publish(e);
 
         // verifies
         expect(output).toEqual('called with: a, b, c');
+    });
+
+    it("throws error when tries to publish a non EventType object", function () {
+        var publish = function () {
+            publisher.publish({});
+        };
+
+        expect(publish).toThrow();
     });
 
     it("publishes callbacks with alternative contexts", function () {
@@ -43,7 +53,8 @@ describe("Koine.Publisher", function () {
             storage.push(this.getName());
         });
 
-        publisher.publish({ type: 'event', target: object });
+        var e = new Koine.Publisher.EventType("event", object);
+        publisher.publish(e);
 
         expect(storage).toEqual(['foo']);
     });
@@ -57,7 +68,8 @@ describe("Koine.Publisher", function () {
 
         publisher.clearSubscriptions();
 
-        publisher.publish({type: 'event'});
+        var e = new Koine.Publisher.EventType("event");
+        publisher.publish(e);
 
         expect(output).toEqual('');
     });
@@ -81,14 +93,16 @@ describe("Koine.Publisher", function () {
         it("unsubscribes single event", function () {
             publisher.unsubscribe('event', b);
 
-            publisher.publish({type: 'event'});
+            var e = new Koine.Publisher.EventType("event");
+            publisher.publish(e);
             expect(output).toEqual('ac');
         });
 
         it("unsubscribes all callbacks from an event", function () {
             publisher.unsubscribe('event');
 
-            publisher.publish({type: 'event'});
+            var e = new Koine.Publisher.EventType("event");
+            publisher.publish(e);
 
             expect(output).toEqual('');
         });
@@ -101,7 +115,10 @@ describe("Koine.Publisher", function () {
             Class = function() {};
 
             Class.prototype.doSomething = function () {
-                this.trigger({ type: 'class:do', data: counter++});
+                var e = new Koine.Publisher.EventType("class:do");
+                e.data = counter++;
+
+                this.trigger(e);
             };
 
             Class.prototype.sayHello = function (data) {
@@ -139,7 +156,9 @@ describe("Koine.Publisher", function () {
                 storage1.push(this.sayHello('World'));
             });
 
-            instance1.trigger({ type: 'event' });
+
+            var e = new Koine.Publisher.EventType("event");
+            instance1.trigger(e);
 
             expect(storage1).toEqual(['Hello World']);
         });
@@ -153,5 +172,42 @@ describe("Koine.Publisher", function () {
 
             expect(publisher.unsubscribe).toHaveBeenCalledWith('class:do', 'foo');
         });
+    });
+});
+
+describe("Koine.Publisher.EventType", function () {
+    var Class, event;
+    beforeEach(function () {
+        Class = function() {
+            Koine.Publisher.EventType.call(this, "class");
+        };
+
+        Class.prototype = Koine.Publisher.EventType.prototype;
+        event = new Class();
+    });
+
+    it("is inheritable", function () {
+        expect(event instanceof Koine.Publisher.EventType).toBeTruthy();
+    });
+
+    it("returns type", function () {
+        expect(event.type).toEqual('class');
+    });
+
+    it("throws Error when no type is defined", function () {
+        var construct = function () {
+            new Koine.Publisher.EventType;
+        };
+
+        expect(construct).toThrow();
+    });
+
+    it("target is initially undefined", function () {
+        expect(event.target).toBeUndefined();
+    });
+
+    it("has a settable target", function () {
+        var t = "target";
+        expect(new Koine.Publisher.EventType("type", t).target).toEqual(t)
     });
 });

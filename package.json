@@ -9,9 +9,13 @@
         "subscriber"
      ],
     "devDependencies": {
-        "jasmine": "~2.*"
+        "jasmine": "~2.*",
+        "grunt": "*",
+        "grunt-contrib-jasmine": "*",
+        "grunt-usemin": "~0.1.7",
+        "grunt-contrib-jshint": "~0.6.0"
     },
     "scripts": {
-        "test": "jasmine-node specs"
+        "test": "grunt travis"
     }
 }

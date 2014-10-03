@@ -1,3 +1,5 @@
+var exports = exports || null;
+
 (function (Koine) {
   "use strinct";
 
@@ -149,4 +151,4 @@
     this.type = type;
   };
 
-})(typeof(exports) === "undefined" ? (this.Koine || (this.Koine = {})) : exports);
+})(exports ? exports :(this.Koine || (this.Koine = {})));

@@ -167,6 +167,17 @@ describe("Koine.Publisher", function () {
       expect(storage1).toEqual(['Hello World']);
     });
 
+    describe("#trigger()", function () {
+      it("can receive a string as argument", function () {
+        var a = [];
+        instance1.on('event', function () {
+          a.push('foo');
+        });
+        instance1.trigger('event');
+        expect(a).toEqual(['foo']);
+      });
+    });
+
     it("makes possible to remove callbacks calling the .off() method on the wrapped object", function () {
       var publisher = instance1.getPublisher();
 

@@ -128,6 +128,10 @@ var exports = exports || null;
      * @return self
      */
     className.prototype.trigger = function (e) {
+      if (typeof(e) === 'string') {
+        e = new Koine.Publisher.EventType(e);
+      }
+
       e.target = e.target || this;
       this.getPublisher().publish(e);
 

@@ -1,9 +1,12 @@
 {
   "name": "koine-publisher",
   "description": "A publisher/subscriber implementation",
-  "version": "0.9.0",
+  "version": "0.9.1",
   "license": "MIT",
-  "author": "Marcelo Jacobus <marcelo.jacobus@gmail.com>",
+  "author": {
+    "name" : "Marcelo Jacobus",
+    "email": "marcelo.jacobus@gmail.com"
+  },
   "tags": [
     "publisher",
     "subscriber"

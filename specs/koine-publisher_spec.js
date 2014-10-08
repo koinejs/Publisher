@@ -167,6 +167,20 @@ describe("Koine.Publisher", function () {
       expect(storage1).toEqual(['Hello World']);
     });
 
+    describe("#on()", function () {
+      it("accepts multiple events", function () {
+        var storage = [];
+
+        instance1.on('foo, bar', function (e) {
+          storage.push(e.type);
+        });
+
+        instance1.trigger('foo').trigger('bar');
+        expect(storage).toEqual(['foo', 'bar']);
+      });
+    });
+
+
     describe("#trigger()", function () {
       it("can receive a string as argument", function () {
         var a = [];

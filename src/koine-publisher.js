@@ -104,7 +104,17 @@ var exports = exports || null;
      * @return self
      */
     className.prototype.on = function (eventName, callback) {
-      this.getPublisher().subscribe(eventName, callback);
+
+      if (eventName.indexOf(',') > 0) {
+        var that = this;
+
+        eventName.split(',').forEach(function (string) {
+          that.on(string.trim(), callback);
+        });
+
+      } else {
+        this.getPublisher().subscribe(eventName, callback);
+      }
 
       return this;
     };

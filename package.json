@@ -14,6 +14,7 @@
   "devDependencies": {
     "jasmine": "~2.*",
     "grunt": "*",
+    "grunt-contrib-uglify":"*",
     "grunt-contrib-jasmine": "*",
     "grunt-usemin": "~0.1.7",
     "grunt-contrib-jshint": "~0.6.0"
